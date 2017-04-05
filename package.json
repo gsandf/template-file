@@ -7,6 +7,7 @@
     "Blake Knight <oss.ideas@gmail.com> (http://blakek.me/)"
   ],
   "license": "MIT",
+  "bin": "cli.js",
   "scripts": {
     "test": "ava"
   },
