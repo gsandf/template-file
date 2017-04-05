@@ -7,8 +7,17 @@
   "contributors": [
     "Blake Knight <oss.ideas@gmail.com> (http://blakek.me/)"
   ],
+  "homepage": "https://github.com/gsandf/template-file#readme",
+  "keywords": [
+    "template",
+    "replace",
+    "handlebars"
+  ],
   "license": "MIT",
   "bin": "cli.js",
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "scripts": {
     "test": "ava"
   },
