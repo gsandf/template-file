@@ -2,6 +2,8 @@
 
 > 🔀 Replace {{ variables }} in all your files
 
+[![Build status](https://travis-ci.org/gsandf/template-file.svg?branch=master)](https://travis-ci.org/gsandf/template-file)
+
 Use variables to replace template strings in any type of file.
 
 **⚠️ NOTE:** As of right now, only shallow values can be used in files.  We know this sucks, and there’s an open [issue](https://github.com/gsandf/template-file/issues/1) for it.  However, we believe in releasing early and often.
