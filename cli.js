@@ -3,6 +3,7 @@ const path = require('path')
 const pify = require('pify')
 const glob = pify(require('glob'))
 const meow = require('meow')
+const pLimit = require('p-limit')(64)
 const { renderTemplateFile } = require('.')
 
 const writeFile = pify(fs.writeFile)
@@ -41,6 +42,8 @@ glob(sourceGlob)
   .then(fileWriteOperations => Promise.all(fileWriteOperations))
 
 function renderToFile({ data, file, destination }) {
-  renderTemplateFile(file, data)
-    .then(renderedString => writeFile(destination, renderedString))
+  return pLimit(() =>
+    renderTemplateFile(file, data)
+      .then(renderedString => writeFile(destination, renderedString))
+  )
 }

@@ -13,6 +13,7 @@
   "dependencies": {
     "glob": "^7.1.1",
     "meow": "^3.7.0",
+    "p-limit": "^1.1.0",
     "pify": "^2.3.0"
   },
   "devDependencies": {
