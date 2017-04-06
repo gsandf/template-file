@@ -3,6 +3,7 @@
 > 🔀 Replace {{ variables }} in all your files
 
 [![Build status](https://travis-ci.org/gsandf/template-file.svg?branch=master)](https://travis-ci.org/gsandf/template-file)
+[![Greenkeeper badge](https://badges.greenkeeper.io/gsandf/template-file.svg)](https://greenkeeper.io/)
 
 Use variables to replace template strings in any type of file.
 
