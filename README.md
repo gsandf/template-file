@@ -7,6 +7,11 @@
 
 Use variables to replace template strings in any type of file.
 
+**✨ Some helpful features:**
+
+ - If you use a JavaScript file as the `dataFile` argument, whatever object the JS exports is used for replacement.
+ - If the value of one of the keys is a function, the result of that function is used for replacement.
+
 **⚠️ NOTE:** As of right now, only shallow values can be used in files.  We know this sucks, and there’s an open [issue](https://github.com/gsandf/template-file/issues/1) for it.  However, we believe in releasing early and often.
 
 ## Usage
@@ -35,6 +40,12 @@ Compile all `.abc` files in `src/` to `build/`:
 
 ```shell
 template-file stuff.json 'src/**/*.abc' build/
+```
+
+Compile all HTML files in `src/` to `dist/` using the result of a JavaScript module:
+
+```shell
+template-file retrieveData.js 'src/**/*.html' './dist'
 ```
 
 ## API
