@@ -10,6 +10,11 @@ function renderString(template, data) {
       return ''
     }
 
+    // If the replacement is a function, replace the variable with the result of the function
+    if (typeof replacement === 'function') {
+      return replacement()
+    }
+
     return replacement
   })
 }
