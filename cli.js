@@ -31,7 +31,7 @@ if (cli.input.length !== 3) {
 }
 
 const [dataFile, sourceGlob, destination] = cli.input
-const data = JSON.parse(fs.readFileSync(dataFile, 'utf8'))
+const data = require(path.resolve(dataFile))
 
 glob(sourceGlob)
   .then(files => files.map(file => ({
