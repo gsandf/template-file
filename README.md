@@ -11,8 +11,9 @@ Use variables to replace template strings in any type of file.
 
  - If you use a JavaScript file as the `dataFile` argument, whatever object the JS exports is used for replacement.
  - If the value of one of the keys is a function, the result of that function is used for replacement.
+ - Deeply-nested keys can be used for replacements.
 
-**⚠️ NOTE:** As of right now, only shallow values can be used in files.  We know this sucks, and there’s an open [issue](https://github.com/gsandf/template-file/issues/1) for it.  However, we believe in releasing early and often.
+ **⚠️ NOTE:** Keys with a period in the name will not be resolved.  `{{ user.name }}` will look for `{ user: { name: '' }}` but not `{ 'user.name': ''}`.  This would be easy to change, but we're leaving as-is for now for slightly better replacement performance (please open an issue if you would like the other behavior).
 
 ## Usage
 
@@ -28,7 +29,7 @@ template-file <dataFile> <sourceGlob> <destination>
 
 ### Examples
 
-**ℹ️ TIP:** Remember to place single quotes around your arguments (if they contain asterisks, question marks, etc.) to keep your shell from expanding globs before `template-file` gets to consume them.
+**ℹ️ TIP:** Remember to place quotes around your arguments (if they contain asterisks, question marks, etc.) to keep your shell from expanding globs before `template-file` gets to consume them.
 
 Just handle one file:
 
@@ -42,7 +43,7 @@ Compile all `.abc` files in `src/` to `build/`:
 template-file stuff.json 'src/**/*.abc' build/
 ```
 
-Compile all HTML files in `src/` to `dist/` using the result of a JavaScript module:
+Compile all HTML files in `src/` to `dist/` using the exported result of a JavaScript module:
 
 ```shell
 template-file retrieveData.js 'src/**/*.html' './dist'
@@ -54,12 +55,14 @@ template-file retrieveData.js 'src/**/*.html' './dist'
 const { renderString, renderTemplateFile } = require('template-file')
 
 const data = {
-  company: "GS&F",
-  adjective: "cool"
+  location: {
+    name: 'Nashville'
+  },
+  adjective: 'cool'
 }
 
 // Replace variables in string
-renderString('{{ company }} is {{ adjective }}.', data) // 'GS&F is cool.'
+renderString('{{ location.name }} is {{ adjective }}.', data) // 'Nashville is cool.'
 
 // Replace variables in a file
 renderTemplateFile('/path/to/file', data)
@@ -68,19 +71,27 @@ renderTemplateFile('/path/to/file', data)
 
 ## Install
 
-With either [Yarn](https://yarnpkg.com/) or [npm](https://npmjs.org/) installed, run one of the following:
+With either [Yarn](https://yarnpkg.com/) or [npm](https://npmjs.org/) installed, run **one** of the following:
 
 ```shell
 # If using Yarn, add to project:
 yarn add template-file
 
-# ...or install globally to use anywhere:
+# ...or install as development dependency:
+# (use this command if you're using `template-file` to build your project)
+yarn add --dev template-file
+
+# ...*or* install globally to use anywhere:
 yarn global add template-file
 
 # If using npm, add to project:
 npm install --save template-file
 
-# ...or install globally to use anywhere:
+# ...or install as development dependency:
+# (use this command if you're using `template-file` to build your project)
+npm install --save-dev template-file
+
+# ...*or* install globally to use anywhere:
 npm install --global template-file
 ```
 
