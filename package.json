@@ -22,6 +22,7 @@
     "test": "ava"
   },
   "dependencies": {
+    "dot-prop": "^4.2.0",
     "glob": "^7.1.1",
     "meow": "^3.7.0",
     "p-limit": "^1.1.0",
