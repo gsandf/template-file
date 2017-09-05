@@ -23,7 +23,7 @@ const cli = meow(`
     $ template-file data.json template.txt build/
 
     Compile all .abc files in src/ to build/
-    $ template-file stuff.json src/**/*.abc build/
+    $ template-file stuff.json 'src/**/*.abc' build/
 `)
 
 if (cli.input.length !== 3) {
