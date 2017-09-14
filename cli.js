@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-const fs = require('fs')
-const path = require('path')
-const pify = require('pify')
-const glob = pify(require('glob'))
-const meow = require('meow')
-const pLimit = require('p-limit')(64)
-const { renderTemplateFile } = require('.')
+const fs = require('fs');
+const path = require('path');
+const pify = require('pify');
+const glob = pify(require('glob'));
+const meow = require('meow');
+const pLimit = require('p-limit')(64);
+const { renderTemplateFile } = require('.');
 
-const writeFile = pify(fs.writeFile)
+const writeFile = pify(fs.writeFile);
 
 const cli = meow(`
   Usage
@@ -24,27 +24,30 @@ const cli = meow(`
 
     Compile all .abc files in src/ to build/
     $ template-file stuff.json 'src/**/*.abc' build/
-`)
+`);
 
 if (cli.input.length !== 3) {
-  cli.showHelp(2)
+  cli.showHelp(2);
 }
 
-const [dataFile, sourceGlob, destination] = cli.input
-const data = require(path.resolve(dataFile))
+const [dataFile, sourceGlob, destination] = cli.input;
+const data = require(path.resolve(dataFile));
 
 glob(sourceGlob)
-  .then(files => files.map(file => ({
-    data,
-    file,
-    destination: path.join(destination, path.basename(file))
-  })))
+  .then(files =>
+    files.map(file => ({
+      data,
+      file,
+      destination: path.join(destination, path.basename(file))
+    }))
+  )
   .then(fileList => fileList.map(renderToFile))
-  .then(fileWriteOperations => Promise.all(fileWriteOperations))
+  .then(fileWriteOperations => Promise.all(fileWriteOperations));
 
 function renderToFile({ data, file, destination }) {
   return pLimit(() =>
-    renderTemplateFile(file, data)
-      .then(renderedString => writeFile(destination, renderedString))
-  )
+    renderTemplateFile(file, data).then(renderedString =>
+      writeFile(destination, renderedString)
+    )
+  );
 }

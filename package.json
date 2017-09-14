@@ -18,6 +18,9 @@
   "engines": {
     "node": ">=4.0.0"
   },
+  "eslintConfig": {
+    "extends": "gsandf"
+  },
   "scripts": {
     "test": "ava"
   },
@@ -31,10 +34,6 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "eslint": "^4.1.0",
-    "eslint-config-standard": "^10.0.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^5.0.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-config-gsandf": "^0.3.0"
   }
 }
