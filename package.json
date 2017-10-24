@@ -34,6 +34,6 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "eslint": "^4.1.0",
-    "eslint-config-gsandf": "^0.3.0"
+    "eslint-config-gsandf": "^0.4.0"
   }
 }
