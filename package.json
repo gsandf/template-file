@@ -28,7 +28,7 @@
     "dot-prop": "^4.2.0",
     "glob": "^7.1.1",
     "meow": "^3.7.0",
-    "p-limit": "^1.1.0",
+    "p-limit": "^2.0.0",
     "pify": "^3.0.0"
   },
   "devDependencies": {
