@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "eslint": "^5.0.0",
+    "eslint": "^6.0.0",
     "eslint-config-gsandf": "^1.0.0"
   }
 }
