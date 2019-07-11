@@ -25,15 +25,15 @@
     "test": "ava"
   },
   "dependencies": {
-    "dot-prop": "^4.2.0",
+    "dot-prop": "^5.1.0",
     "glob": "^7.1.1",
-    "meow": "^3.7.0",
-    "p-limit": "^1.1.0",
-    "pify": "^3.0.0"
+    "meow": "^5.0.0",
+    "p-limit": "^2.2.0",
+    "pify": "^4.0.1"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
-    "eslint": "^5.0.0",
+    "ava": "^2.2.0",
+    "eslint": "^6.0.1",
     "eslint-config-gsandf": "^1.0.0"
   }
 }
