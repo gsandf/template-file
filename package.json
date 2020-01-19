@@ -32,7 +32,7 @@
     "pify": "^4.0.1"
   },
   "devDependencies": {
-    "ava": "^2.2.0",
+    "ava": "^3.0.0",
     "eslint": "^6.0.1",
     "eslint-config-gsandf": "^1.0.0"
   }
