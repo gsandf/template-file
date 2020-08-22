@@ -27,13 +27,13 @@
   "dependencies": {
     "dot-prop": "^5.1.0",
     "glob": "^7.1.1",
-    "meow": "^5.0.0",
-    "p-limit": "^2.2.0",
-    "pify": "^4.0.1"
+    "meow": "^7.1.0",
+    "p-limit": "^3.0.2",
+    "pify": "^5.0.0"
   },
   "devDependencies": {
-    "ava": "^2.2.0",
-    "eslint": "^6.0.1",
-    "eslint-config-gsandf": "^1.0.0"
+    "ava": "^3.11.1",
+    "eslint": "^7.7.0",
+    "eslint-config-gsandf": "^2.0.0"
   }
 }

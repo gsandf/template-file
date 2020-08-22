@@ -1,8 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import test from 'ava';
-import pify from 'pify';
-import { renderString, renderTemplateFile } from '..';
+const fs = require('fs');
+const path = require('path');
+const test = require('ava');
+const pify = require('pify');
+const { renderString, renderTemplateFile } = require('..');
 
 const readFile = pify(fs.readFile);
 

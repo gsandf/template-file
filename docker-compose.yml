@@ -1,0 +1,14 @@
+version: "3.5"
+services:
+  app:
+    image: node:12-alpine
+    working_dir: /var/app
+    volumes:
+      - ./:/var/app
+      - node_modules_app:/var/app/node_modules
+      - yarn_cache_app:/usr/local/share/.cache/yarn/v6
+    command: sh -c 'yarn && yarn run test --watch'
+
+volumes:
+  node_modules_app:
+  yarn_cache_app:
