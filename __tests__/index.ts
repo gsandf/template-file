@@ -1,15 +1,12 @@
-import fs from 'fs';
-import path from 'path';
 import test from 'ava';
-import pify from 'pify';
-import { renderString, renderTemplateFile } from '..';
-
-const readFile = pify(fs.readFile);
+import fs from 'fs/promises';
+import path from 'path';
+import { renderString, renderTemplateFile } from '../src';
 
 test('Data is replaced when given string', t => {
   // Should return the same without regard of consistent spacing
   const templateString =
-    'The {{ adjective1 }}, {{adjective2 }} {{ person.title}} jumped over the {{adjective3}} {{ noun }}.';
+    'The {{ adjective1 }}, {{adjective2 }} {{ person.title}} jumped over the {{adjective3}} {{   noun\t}}.';
   const templateData = {
     adjective1: 'cool',
     adjective2: 'pizza-loving',
@@ -66,7 +63,7 @@ test('Data is replaced when given file path', async t => {
     }
   });
 
-  const expected = await readFile(expectedFile, 'utf8');
+  const expected = await fs.readFile(expectedFile, { encoding: 'utf-8' });
 
   t.is(actual, expected);
 });

@@ -1,39 +1,92 @@
 {
   "name": "template-file",
   "version": "3.1.0",
+  "main": "dist/index.js",
   "description": "🔀 Replace {{ variables }} in all your files",
-  "main": "index.js",
   "repository": "https://github.com/gsandf/template-file",
   "contributors": [
     "Blake Knight <oss.ideas@gmail.com> (http://blakek.me/)"
   ],
   "homepage": "https://github.com/gsandf/template-file#readme",
+  "bugs": {
+    "url": "https://github.com/gsandf/template-file/issues"
+  },
   "keywords": [
-    "template",
     "replace",
+    "template",
     "handlebars"
   ],
   "license": "MIT",
-  "bin": "cli.js",
+  "files": [
+    "dist/**"
+  ],
+  "sideEffects": false,
+  "types": "dist/index.d.ts",
+  "bin": "dist/cli.js",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=10.0.0"
   },
-  "eslintConfig": {
-    "extends": "gsandf"
+  "ava": {
+    "extensions": [
+      "js",
+      "ts"
+    ],
+    "files": [
+      "__tests__/**/*.ts"
+    ],
+    "ignoredByWatcher": [
+      "!src/**"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   },
-  "scripts": {
-    "test": "ava"
-  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "dependencies": {
-    "dot-prop": "^5.1.0",
-    "glob": "^7.1.1",
-    "meow": "^5.0.0",
-    "p-limit": "^2.2.0",
-    "pify": "^4.0.1"
+    "@blakek/deep": "^2.1.1",
+    "glob": "^7.1.6",
+    "meow": "^8.0.0",
+    "p-limit": "^3.1.0"
   },
   "devDependencies": {
-    "ava": "^2.2.0",
-    "eslint": "^6.0.1",
-    "eslint-config-gsandf": "^1.0.0"
+    "@babel/core": "^7.12.9",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.7",
+    "@babel/preset-typescript": "^7.12.7",
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-typescript": "^8.0.0",
+    "@types/glob": "^7.1.3",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "amper-scripts": "^1.0.0-1",
+    "ava": "^3.13.0",
+    "nodemon": "^2.0.6",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.34.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
+  },
+  "peerDependencies": {},
+  "scripts": {
+    "build:clean": "rimraf ./dist",
+    "build:js": "tsc --build",
+    "build": "run-s build:clean build:js",
+    "format-check": "amper-scripts format-check '*.{js,ts,tsx}' 'src/**/*.{js,ts,tsx}'",
+    "format": "amper-scripts format-write '*.{js,ts,tsx}' 'src/**/*.{js,ts,tsx}'",
+    "lint": "amper-scripts lint --config ./.eslintrc.js '*.{js,ts,tsx}' 'src/**/*.{js,ts,tsx}'",
+    "prepack": "run-s validate build",
+    "test": "ava",
+    "typeCheck": "tsc --noEmit",
+    "validate": "run-p format-check lint typeCheck"
   }
 }
