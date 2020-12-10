@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 interface Data
   extends Record<
     string | number | symbol,
-    string | number | (() => string) | (() => number) | Data
+    string | number | Data | (() => string | number | Data)
   > {}
 
 export function renderString(
