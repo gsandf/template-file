@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import fs from 'fs/promises';
 import _glob from 'glob';
 import meow from 'meow';
