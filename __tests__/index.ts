@@ -1,5 +1,5 @@
 import test from 'ava';
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import path from 'path';
 import { renderString, renderTemplateFile } from '../src';
 
