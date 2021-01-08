@@ -87,6 +87,6 @@
     "prepack": "run-s validate build",
     "test": "ava",
     "typeCheck": "tsc --noEmit",
-    "validate": "run-p format-check lint typeCheck"
+    "validate": "run-p test format-check lint typeCheck"
   }
 }
