@@ -1,11 +1,31 @@
 import { get } from '@blakek/deep';
 import { promises as fs } from 'fs';
+import _glob from 'glob';
+import mkdirp from 'mkdirp';
+import path from 'path';
+import { promisify } from 'util';
 
 interface Data
   extends Record<
     string | number | symbol,
     string | number | Data | (() => string | number | Data)
   > {}
+
+export async function renderGlob(
+  sourceGlob: string,
+  data: Data,
+  onFileCallback: (filename: string, contents: string) => void
+): Promise<void> {
+  const glob = promisify(_glob);
+  const files = await glob(sourceGlob);
+
+  const callbacks = files.map(async file => {
+    const contents = await renderTemplateFile(file, data);
+    onFileCallback(file, contents);
+  });
+
+  await Promise.all(callbacks);
+}
 
 export function renderString(
   template: string,
@@ -34,4 +54,19 @@ export async function renderTemplateFile(
 ): Promise<string> {
   const templateString = await fs.readFile(filepath, { encoding: 'utf-8' });
   return renderString(templateString, data);
+}
+
+export async function renderToFolder(
+  sourceGlob: string,
+  destination: string,
+  data: Data
+): Promise<void> {
+  await mkdirp(destination);
+
+  function writeFile(filename: string, contents: string) {
+    const fullPath = path.join(destination, path.basename(filename));
+    fs.writeFile(fullPath, contents);
+  }
+
+  return renderGlob(sourceGlob, data, writeFile);
 }

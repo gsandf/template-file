@@ -1,7 +1,13 @@
 import test from 'ava';
 import { promises as fs } from 'fs';
+import mkdirp from 'mkdirp';
 import path from 'path';
-import { renderString, renderTemplateFile } from '../src';
+import {
+  renderGlob,
+  renderString,
+  renderTemplateFile,
+  renderToFolder
+} from '../src';
 
 test('Data is replaced when given string', t => {
   // Should return the same without regard of consistent spacing
@@ -66,4 +72,94 @@ test('Data is replaced when given file path', async t => {
   const expected = await fs.readFile(expectedFile, { encoding: 'utf-8' });
 
   t.is(actual, expected);
+});
+
+test('Renders from a glob', async t => {
+  const actualFiles: { name: string; contents: string }[] = [];
+  const expectedFiles = [
+    {
+      name: './__tests__/helpers/templates/also-cool.json',
+      contents: '{ "fullName": "Bob" }\n'
+    },
+    {
+      name: './__tests__/helpers/templates/cool.md',
+      contents: '# Hello, Bob!\n'
+    }
+  ];
+
+  await renderGlob(
+    './__tests__/helpers/templates/**/*.!(txt)',
+    { name: 'Bob' },
+    (name, contents) => {
+      actualFiles.push({ name, contents });
+    }
+  );
+
+  t.is(actualFiles.length, 2);
+
+  if (actualFiles[0].name === expectedFiles[0].name) {
+    t.deepEqual(actualFiles, expectedFiles);
+  } else {
+    t.deepEqual(actualFiles.reverse(), expectedFiles);
+  }
+});
+
+test('Can render output to a file', async t => {
+  const expectedFiles = [
+    {
+      name: './__tests__/helpers/output/also-cool.json',
+      contents: '{ "fullName": "Kai" }\n'
+    },
+    {
+      name: './__tests__/helpers/output/cool.md',
+      contents: '# Hello, Kai!\n'
+    }
+  ];
+
+  await renderToFolder(
+    './__tests__/helpers/templates/**/*.!(txt)',
+    './__tests__/helpers/output',
+    { name: 'Kai' }
+  );
+
+  const tests = expectedFiles.map(async ({ name, contents }) => {
+    const actualContents = await fs.readFile(name, { encoding: 'utf-8' });
+    t.is(actualContents, contents);
+  });
+
+  await Promise.all(tests);
+});
+
+test('Can render a ton of files', async t => {
+  const expectedFiles = [] as { name: string; contents: string }[];
+
+  // Pre-test setup
+  const templateFolder = './__tests__/helpers/large/';
+  const outputFolder = `${templateFolder}/output`;
+  const template = 'Hello, {{ name }}';
+
+  await mkdirp(templateFolder);
+  await Promise.all(
+    Array.from({ length: 100000 }, (_, i) => {
+      const basename = `${i}.template`;
+
+      expectedFiles.push({
+        name: `${outputFolder}/${basename}`,
+        contents: 'Hello, Test'
+      });
+
+      return fs.writeFile(`${templateFolder}/${basename}`, template);
+    })
+  );
+
+  await renderToFolder(`${templateFolder}/*.template`, outputFolder, {
+    name: 'Test'
+  });
+
+  const tests = expectedFiles.map(async ({ name, contents }) => {
+    const actualContents = await fs.readFile(name, { encoding: 'utf-8' });
+    t.is(actualContents, contents);
+  });
+
+  await Promise.all(tests);
 });

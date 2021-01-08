@@ -1,17 +1,10 @@
 #!/usr/bin/env node
 
-import { promises as fs } from 'fs';
-import _glob from 'glob';
 import meow from 'meow';
-import pLimit from 'p-limit';
 import path from 'path';
-import { promisify } from 'util';
-import { renderTemplateFile } from '.';
+import { renderToFolder } from '.';
 
 async function main() {
-  const glob = promisify(_glob);
-  const limitOpenFiles = pLimit(64);
-
   const cli = meow(`
     Usage
       $ template-file <dataFile> <sourceGlob> <destination>
@@ -36,21 +29,7 @@ async function main() {
   const [dataFile, sourceGlob, destination] = cli.input;
   const data = await import(path.resolve(dataFile));
 
-  function renderToFile(file: string, destination: string) {
-    return limitOpenFiles(() =>
-      renderTemplateFile(file, data).then(renderedString =>
-        fs.writeFile(destination, renderedString)
-      )
-    );
-  }
-
-  glob(sourceGlob)
-    .then(files =>
-      files.map(file =>
-        renderToFile(file, path.join(destination, path.basename(file)))
-      )
-    )
-    .then(fileWriteOperations => Promise.all(fileWriteOperations));
+  renderToFolder(sourceGlob, destination, data);
 }
 
 main();

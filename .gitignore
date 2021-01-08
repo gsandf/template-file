@@ -3,6 +3,8 @@ node_modules
 
 # Built code
 dist/
+__tests__/helpers/output/
+__tests__/helpers/large/
 
 # Logs
 logs
