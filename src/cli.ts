@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import _glob from 'glob';
 import meow from 'meow';
 import pLimit from 'p-limit';

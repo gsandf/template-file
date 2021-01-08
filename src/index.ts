@@ -1,5 +1,5 @@
 import { get } from '@blakek/deep';
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 
 interface Data
   extends Record<
