@@ -39,7 +39,8 @@
     ],
     "require": [
       "ts-node/register"
-    ]
+    ],
+    "timeout": "30s"
   },
   "browserslist": [
     ">0.2%",
@@ -50,6 +51,7 @@
     "@blakek/deep": "^2.1.1",
     "glob": "^7.1.6",
     "meow": "^8.0.0",
+    "mkdirp": "^1.0.4",
     "p-limit": "^3.1.0"
   },
   "devDependencies": {
@@ -63,6 +65,7 @@
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-typescript": "^8.0.0",
     "@types/glob": "^7.1.3",
+    "@types/mkdirp": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "amper-scripts": "^1.0.0-1",
