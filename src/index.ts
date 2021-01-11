@@ -38,10 +38,12 @@ export function renderString(template: string, data: Data): string {
     (_match, sectionTag, sectionContents, basicTag) => {
       // Tag is for an array section
       if (sectionTag !== undefined) {
-        const array = get(sectionTag, data);
+        const replacements = get(sectionTag, data);
 
-        return array
-          .map((subData: Data) => renderString(sectionContents, subData))
+        return replacements
+          .map((subData: Data) => {
+            return renderString(sectionContents, { ...subData, this: subData });
+          })
           .join('');
       }
 

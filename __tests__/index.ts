@@ -180,3 +180,19 @@ test('renders lists of objects', t => {
 
   t.is(renderString(template, { people: [] }), '\n<ul>\n  \n</ul>');
 });
+
+test('renders array', t => {
+  const template = `
+<ul>
+  {{#people}}
+  <li>{{ this }}</li>
+  {{/people}}
+</ul>`;
+
+  t.is(
+    renderString(template, {
+      people: ['Blake', 'Dash']
+    }),
+    '\n<ul>\n  <li>Blake</li><li>Dash</li>\n</ul>'
+  );
+});
