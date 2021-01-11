@@ -20,19 +20,19 @@ export async function renderGlob(
   const files = await glob(sourceGlob);
 
   for (const file of files) {
-    const contents = await limitOpenFiles(() => renderTemplateFile(file, data));
+    const contents = await limitOpenFiles(() => renderFile(file, data));
     onFileCallback(file, contents);
   }
 }
 
 const tagRegEx = /\{\{\s*(.*?)\s*\}\}/g;
-const sectionRegEx = /\{\{\s*(?:#(.*?))\s*\}\}\s*([\s\S]*?)\s*\{\{\s*\/\1\s*\}\}/g;
+const sectionRegEx = /\{\{\s*(?:#(.*?))\s*\}\}\n*([\s\S]*?)\s*\{\{\s*\/\1\s*\}\}/g;
 const combinedRegEx = new RegExp(
   `${sectionRegEx.source}|${tagRegEx.source}`,
   'g'
 );
 
-export function renderString(template: string, data: Data): string {
+export function render(template: string, data: Data): string {
   return template.replace(
     combinedRegEx,
     (_match, sectionTag, sectionContents, basicTag) => {
@@ -42,9 +42,9 @@ export function renderString(template: string, data: Data): string {
 
         return replacements
           .map((subData: Data) => {
-            return renderString(sectionContents, { ...subData, this: subData });
+            return render(sectionContents, { ...subData, this: subData });
           })
-          .join('');
+          .join('\n');
       }
 
       const replacement = get(basicTag, data);
@@ -64,12 +64,12 @@ export function renderString(template: string, data: Data): string {
   );
 }
 
-export async function renderTemplateFile(
+export async function renderFile(
   filepath: string,
   data: Data
 ): Promise<string> {
   const templateString = await fs.readFile(filepath, { encoding: 'utf-8' });
-  return renderString(templateString, data);
+  return render(templateString, data);
 }
 
 export async function renderToFolder(

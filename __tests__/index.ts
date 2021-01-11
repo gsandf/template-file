@@ -2,12 +2,7 @@ import test from 'ava';
 import { promises as fs } from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
-import {
-  renderGlob,
-  renderString,
-  renderTemplateFile,
-  renderToFolder
-} from '../src';
+import { render, renderFile, renderGlob, renderToFolder } from '../src';
 import { limitOpenFiles } from '../src/utils';
 
 test('Data is replaced when given string', t => {
@@ -24,7 +19,7 @@ test('Data is replaced when given string', t => {
     }
   };
 
-  const actual = renderString(templateString, templateData);
+  const actual = render(templateString, templateData);
   const expected =
     'The cool, pizza-loving developer jumped over the silly laptop.';
 
@@ -62,7 +57,7 @@ test('Data is replaced when given file path', async t => {
     'text/xml'
   ];
 
-  const actual = await renderTemplateFile(inputFile, {
+  const actual = await renderFile(inputFile, {
     aPath: '/this-is-a-test',
     domain: 'reallycooldomain.com',
     gzip: {
@@ -172,13 +167,17 @@ test('renders lists of objects', t => {
 </ul>`;
 
   t.is(
-    renderString(template, {
+    render(template, {
       people: [{ name: 'Blake' }, { name: 'Dash' }]
     }),
-    '\n<ul>\n  <li>Blake</li><li>Dash</li>\n</ul>'
+    `
+<ul>
+    <li>Blake</li>
+  <li>Dash</li>
+</ul>`
   );
 
-  t.is(renderString(template, { people: [] }), '\n<ul>\n  \n</ul>');
+  t.is(render(template, { people: [] }), '\n<ul>\n  \n</ul>');
 });
 
 test('renders array', t => {
@@ -190,9 +189,13 @@ test('renders array', t => {
 </ul>`;
 
   t.is(
-    renderString(template, {
+    render(template, {
       people: ['Blake', 'Dash']
     }),
-    '\n<ul>\n  <li>Blake</li><li>Dash</li>\n</ul>'
+    `
+<ul>
+    <li>Blake</li>
+  <li>Dash</li>
+</ul>`
   );
 });
