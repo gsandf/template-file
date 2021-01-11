@@ -129,7 +129,7 @@ test('Can render output to a file', async t => {
   }
 });
 
-test.skip('Can render a ton of files', async t => {
+test('Can render a ton of files', async t => {
   const expectedFiles = [] as { name: string; contents: string }[];
 
   // Pre-test setup
