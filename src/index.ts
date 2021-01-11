@@ -25,20 +25,27 @@ export async function renderGlob(
   }
 }
 
+const tagRegEx = /\{\{\s*(.*?)\s*\}\}/g;
+const sectionRegEx = /\{\{\s*(?:#(.*?))\s*\}\}\s*([\s\S]*?)\s*\{\{\s*\/\1\s*\}\}/g;
+const combinedRegEx = new RegExp(
+  `${sectionRegEx.source}|${tagRegEx.source}`,
+  'g'
+);
+
 export function renderString(template: string, data: Data): string {
-  return template
-    .replace(
-      // '{{#tag}}stuff{{/tag}}
-      /\{\{\s*#\s*(.*?)\s*\}\}\s*([\s\S]+?)\s*\{\{\s*\/\s*\1\s*\}\}/g,
-      (_match, tag, contents) => {
-        const array = get(tag, data);
+  return template.replace(
+    combinedRegEx,
+    (_match, sectionTag, sectionContents, basicTag) => {
+      // Tag is for an array section
+      if (sectionTag !== undefined) {
+        const array = get(sectionTag, data);
+
         return array
-          .map((subData: Data) => renderString(contents, subData))
+          .map((subData: Data) => renderString(sectionContents, subData))
           .join('');
       }
-    )
-    .replace(/\{\{\s*(.*?)\s*\}\}/g, (_match, captured) => {
-      const replacement = get(captured, data);
+
+      const replacement = get(basicTag, data);
 
       // If a template variable is found but nothing is supplied to fill it, remove it
       if (replacement === null || replacement === undefined) {
@@ -51,7 +58,8 @@ export function renderString(template: string, data: Data): string {
       }
 
       return replacement;
-    });
+    }
+  );
 }
 
 export async function renderTemplateFile(
