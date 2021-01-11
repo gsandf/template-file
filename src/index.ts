@@ -4,6 +4,7 @@ import _glob from 'glob';
 import mkdirp from 'mkdirp';
 import path from 'path';
 import { promisify } from 'util';
+import { limitOpenFiles } from './utils';
 
 interface Data
   extends Record<
@@ -19,12 +20,10 @@ export async function renderGlob(
   const glob = promisify(_glob);
   const files = await glob(sourceGlob);
 
-  const callbacks = files.map(async file => {
-    const contents = await renderTemplateFile(file, data);
+  for (const file of files) {
+    const contents = await limitOpenFiles(() => renderTemplateFile(file, data));
     onFileCallback(file, contents);
-  });
-
-  await Promise.all(callbacks);
+  }
 }
 
 export function renderString(
