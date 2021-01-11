@@ -6,11 +6,10 @@ import path from 'path';
 import { promisify } from 'util';
 import { limitOpenFiles } from './utils';
 
+type DataValue = string | number | Data | (() => string | number | Data);
+
 interface Data
-  extends Record<
-    string | number | symbol,
-    string | number | Data | (() => string | number | Data)
-  > {}
+  extends Record<string | number | symbol, DataValue | DataValue[]> {}
 
 export async function renderGlob(
   sourceGlob: string,
@@ -26,25 +25,33 @@ export async function renderGlob(
   }
 }
 
-export function renderString(
-  template: string,
-  data: Data
-): string | Promise<string> {
-  return template.replace(/\{\{\s*(.*?)\s*\}\}/g, (_match, captured) => {
-    const replacement = get(captured, data);
+export function renderString(template: string, data: Data): string {
+  return template
+    .replace(
+      // '{{#tag}}stuff{{/tag}}
+      /\{\{\s*#\s*(.*?)\s*\}\}\s*([\s\S]+?)\s*\{\{\s*\/\s*\1\s*\}\}/g,
+      (_match, tag, contents) => {
+        const array = get(tag, data);
+        return array
+          .map((subData: Data) => renderString(contents, subData))
+          .join('');
+      }
+    )
+    .replace(/\{\{\s*(.*?)\s*\}\}/g, (_match, captured) => {
+      const replacement = get(captured, data);
 
-    // If a template variable is found but nothing is supplied to fill it, remove it
-    if (replacement === null || replacement === undefined) {
-      return '';
-    }
+      // If a template variable is found but nothing is supplied to fill it, remove it
+      if (replacement === null || replacement === undefined) {
+        return '';
+      }
 
-    // If the replacement is a function, replace the variable with the result of the function
-    if (typeof replacement === 'function') {
-      return replacement();
-    }
+      // If the replacement is a function, replace the variable with the result of the function
+      if (typeof replacement === 'function') {
+        return replacement();
+      }
 
-    return replacement;
-  });
+      return replacement;
+    });
 }
 
 export async function renderTemplateFile(
