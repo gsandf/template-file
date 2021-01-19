@@ -6,11 +6,10 @@ import path from 'path';
 import { promisify } from 'util';
 import { limitOpenFiles } from './utils';
 
+type DataValue = string | number | Data | (() => string | number | Data);
+
 interface Data
-  extends Record<
-    string | number | symbol,
-    string | number | Data | (() => string | number | Data)
-  > {}
+  extends Record<string | number | symbol, DataValue | DataValue[]> {}
 
 export async function renderGlob(
   sourceGlob: string,
@@ -21,38 +20,56 @@ export async function renderGlob(
   const files = await glob(sourceGlob);
 
   for (const file of files) {
-    const contents = await limitOpenFiles(() => renderTemplateFile(file, data));
+    const contents = await limitOpenFiles(() => renderFile(file, data));
     onFileCallback(file, contents);
   }
 }
 
-export function renderString(
-  template: string,
-  data: Data
-): string | Promise<string> {
-  return template.replace(/\{\{\s*(.*?)\s*\}\}/g, (_match, captured) => {
-    const replacement = get(captured, data);
+const tagRegEx = /\{\{\s*(.*?)\s*\}\}/g;
+const sectionRegEx = /\{\{\s*(?:#(.*?))\s*\}\}\n*([\s\S]*?)\s*\{\{\s*\/\1\s*\}\}/g;
+const combinedRegEx = new RegExp(
+  `${sectionRegEx.source}|${tagRegEx.source}`,
+  'g'
+);
 
-    // If a template variable is found but nothing is supplied to fill it, remove it
-    if (replacement === null || replacement === undefined) {
-      return '';
+export function render(template: string, data: Data): string {
+  return template.replace(
+    combinedRegEx,
+    (_match, sectionTag, sectionContents, basicTag) => {
+      // Tag is for an array section
+      if (sectionTag !== undefined) {
+        const replacements = get(sectionTag, data);
+
+        return replacements
+          .map((subData: Data) => {
+            return render(sectionContents, { ...subData, this: subData });
+          })
+          .join('\n');
+      }
+
+      const replacement = get(basicTag, data);
+
+      // If a template variable is found but nothing is supplied to fill it, remove it
+      if (replacement === null || replacement === undefined) {
+        return '';
+      }
+
+      // If the replacement is a function, replace the variable with the result of the function
+      if (typeof replacement === 'function') {
+        return replacement();
+      }
+
+      return replacement;
     }
-
-    // If the replacement is a function, replace the variable with the result of the function
-    if (typeof replacement === 'function') {
-      return replacement();
-    }
-
-    return replacement;
-  });
+  );
 }
 
-export async function renderTemplateFile(
+export async function renderFile(
   filepath: string,
   data: Data
 ): Promise<string> {
   const templateString = await fs.readFile(filepath, { encoding: 'utf-8' });
-  return renderString(templateString, data);
+  return render(templateString, data);
 }
 
 export async function renderToFolder(
