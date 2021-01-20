@@ -26,15 +26,15 @@ export async function renderGlob(
 }
 
 function getTemplateRegEx() {
-  const anything = '([\\s\\S]*?)';
-  const optionalNewLines = '\\n*';
-  const optionalWhitespace = '\\s*';
-  const spaceNotNewLines = `[ \t]*`;
+  const anything = String.raw`([\s\S]*?)`;
+  const optionalNewLines = String.raw`\n*`;
+  const optionalWhitespace = String.raw`\s*`;
+  const spaceNotNewLines = String.raw`[ \t]*`;
 
   const tagStart = `{{${optionalWhitespace}`;
   const tagEnd = `${optionalWhitespace}}}`;
   const sectionStart = `${spaceNotNewLines}${tagStart}(?:#(.*?))${tagEnd}${optionalNewLines}`;
-  const sectionEnd = `${optionalWhitespace}${tagStart}\\/\\1${tagEnd}`;
+  const sectionEnd = String.raw`${optionalWhitespace}${tagStart}/\1${tagEnd}`;
 
   const repeatingSectionTag = `${sectionStart}${anything}${sectionEnd}`;
   const replacementTag = `${tagStart}(.*?)${tagEnd}`;
