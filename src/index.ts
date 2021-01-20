@@ -25,18 +25,34 @@ export async function renderGlob(
   }
 }
 
-const tagRegEx = /\{\{\s*(.*?)\s*\}\}/g;
-const sectionRegEx = /\{\{\s*(?:#(.*?))\s*\}\}\n*([\s\S]*?)\s*\{\{\s*\/\1\s*\}\}/g;
-const combinedRegEx = new RegExp(
-  `${sectionRegEx.source}|${tagRegEx.source}`,
-  'g'
-);
+function getTemplateRegEx() {
+  const anything = '([\\s\\S]*?)';
+  const optionalNewLines = '\\n*';
+  const optionalWhitespace = '\\s*';
+  const spaceNotNewLines = `[ \t]*`;
+
+  const tagStart = `{{${optionalWhitespace}`;
+  const tagEnd = `${optionalWhitespace}}}`;
+  const sectionStart = `${spaceNotNewLines}${tagStart}(?:#(.*?))${tagEnd}${optionalNewLines}`;
+  const sectionEnd = `${optionalWhitespace}${tagStart}\\/\\1${tagEnd}`;
+
+  const repeatingSectionTag = `${sectionStart}${anything}${sectionEnd}`;
+  const replacementTag = `${tagStart}(.*?)${tagEnd}`;
+  const combinedRegEx = new RegExp(
+    `${repeatingSectionTag}|${replacementTag}`,
+    'g'
+  );
+
+  return combinedRegEx;
+}
 
 export function render(template: string, data: Data): string {
+  const templateRegEx = getTemplateRegEx();
+
   return template.replace(
-    combinedRegEx,
-    (_match, sectionTag, sectionContents, basicTag) => {
-      // Tag is for an array section
+    templateRegEx,
+    (_match, sectionTag, sectionContents, replacementTag) => {
+      // Tag is for a repeating section
       if (sectionTag !== undefined) {
         const replacements = get(sectionTag, data);
 
@@ -47,7 +63,7 @@ export function render(template: string, data: Data): string {
           .join('\n');
       }
 
-      const replacement = get(basicTag, data);
+      const replacement = get(replacementTag, data);
 
       // If a template variable is found but nothing is supplied to fill it, remove it
       if (replacement === null || replacement === undefined) {

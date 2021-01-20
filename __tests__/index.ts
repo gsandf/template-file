@@ -172,12 +172,12 @@ test('renders lists of objects', t => {
     }),
     `
 <ul>
-    <li>Blake</li>
+  <li>Blake</li>
   <li>Dash</li>
 </ul>`
   );
 
-  t.is(render(template, { people: [] }), '\n<ul>\n  \n</ul>');
+  t.is(render(template, { people: [] }), '\n<ul>\n\n</ul>');
 });
 
 test('renders array', t => {
@@ -194,7 +194,7 @@ test('renders array', t => {
     }),
     `
 <ul>
-    <li>Blake</li>
+  <li>Blake</li>
   <li>Dash</li>
 </ul>`
   );
