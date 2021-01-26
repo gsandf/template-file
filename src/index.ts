@@ -6,9 +6,9 @@ import path from 'path';
 import { promisify } from 'util';
 import { limitOpenFiles } from './utils';
 
-type DataValue = string | number | Data | (() => string | number | Data);
+export type DataValue = string | number | Data | (() => string | number | Data);
 
-interface Data
+export interface Data
   extends Record<string | number | symbol, DataValue | DataValue[]> {}
 
 export async function renderGlob(
