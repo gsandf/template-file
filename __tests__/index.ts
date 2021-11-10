@@ -2,8 +2,7 @@ import test from 'ava';
 import { promises as fs } from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
-import { render, renderFile, renderGlob, renderToFolder } from '../src';
-import { limitOpenFiles } from '../src/utils';
+import { render, renderFile, renderGlob, renderToFolder } from '..';
 
 test('Data is replaced when given string', t => {
   // Should return the same without regard of consistent spacing
@@ -142,9 +141,7 @@ test.skip('Can render a ton of files', async t => {
         contents: 'Hello, Test'
       });
 
-      return limitOpenFiles(() =>
-        fs.writeFile(`${templateFolder}/${basename}`, template)
-      );
+      return () => fs.writeFile(`${templateFolder}/${basename}`, template);
     })
   );
 
