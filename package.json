@@ -80,7 +80,7 @@
     "format-check": "amper-scripts format-check '*.{js,ts,tsx}' 'src/**/*.{js,ts,tsx}'",
     "format": "amper-scripts format-write '*.{js,ts,tsx}' 'src/**/*.{js,ts,tsx}'",
     "lint": "amper-scripts lint --config ./.eslintrc.js '*.{js,ts,tsx}' 'src/**/*.{js,ts,tsx}'",
-    "prepack": "run-s validate build",
+    "prepack": "run-s build validate",
     "test": "ava",
     "typeCheck": "tsc --noEmit",
     "validate": "run-p test format-check lint typeCheck"
