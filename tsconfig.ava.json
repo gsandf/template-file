@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "module": "CommonJS",
+    "target": "ES5"
+  },
+  "include": ["__tests__/**/*.ts"],
+  "exclude": ["node_modules"]
+}
