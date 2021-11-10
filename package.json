@@ -48,11 +48,11 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@blakek/deep": "^2.1.1",
+    "@blakek/deep": "^2.2.0",
     "glob": "^7.1.6",
-    "meow": "^8.0.0",
+    "meow": "^8",
     "mkdirp": "^1.0.4",
-    "p-limit": "^3.1.0"
+    "p-limit": "^3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -61,13 +61,13 @@
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-typescript": "^7.12.7",
     "@rollup/plugin-babel": "^5.2.2",
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
     "@rollup/plugin-typescript": "^8.0.0",
     "@types/glob": "^7.1.3",
     "@types/mkdirp": "^1.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.9.0",
-    "@typescript-eslint/parser": "^4.9.0",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
     "amper-scripts": "^1.0.0-1",
     "ava": "^3.13.0",
     "nodemon": "^2.0.6",
@@ -76,7 +76,7 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.34.0",
     "rollup-plugin-terser": "^7.0.2",
-    "ts-node": "^9.0.0",
+    "ts-node": "^10.4.0",
     "typescript": "^4.1.2"
   },
   "peerDependencies": {},
