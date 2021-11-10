@@ -5,7 +5,8 @@ import path from 'path';
 import { renderToFolder } from '.';
 
 async function main() {
-  const cli = meow(`
+  const cli = meow(
+    `
     Usage
       $ template-file <dataFile> <sourceGlob> <destination>
 
@@ -20,7 +21,9 @@ async function main() {
 
       Compile all .abc files in src/ to build/
       $ template-file stuff.json 'src/**/*.abc' build/
-  `);
+  `
+    // { importMeta: import.meta }
+  );
 
   if (cli.input.length !== 3) {
     cli.showHelp(2);

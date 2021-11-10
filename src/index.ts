@@ -54,7 +54,7 @@ export function render(template: string, data: Data): string {
     (_match, sectionTag, sectionContents, replacementTag) => {
       // Tag is for a repeating section
       if (sectionTag !== undefined) {
-        const replacements = get(sectionTag, data);
+        const replacements = get(sectionTag, data) as Data[] | undefined;
 
         return replacements
           .map((subData: Data) => {
